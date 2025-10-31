@@ -2,8 +2,9 @@ import { prisma } from "@/lib/prisma";
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/webhooks";
+import { log } from "console";
 
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET!;
+const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET!;
 
 export async function POST(request: Request) {
     const headerPayload = await headers();
@@ -20,9 +21,14 @@ export async function POST(request: Request) {
 
     const payload = await request.json();
     const body = JSON.stringify(payload);
+    console.log(svixId);
+    console.log(svixTimestamp);
+    console.log(svixSignature);
+    console.log(headerPayload);
+    
+    
 
-
-    const wh = new Webhook(WEBHOOK_SECRET);
+    const wh = new Webhook(CLERK_WEBHOOK_SIGNING_SECRET);
 
     let evt: WebhookEvent;
 
