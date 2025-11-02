@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/webhooks";  
+import { NextResponse } from "next/server";
 
 const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET!;
 
@@ -21,7 +22,9 @@ export async function POST(request: Request) {
 
     if(!svixId || !svixTimestamp || !svixSignature) {
         console.error("Missing required Svix headers");
-        return new Response("Unauthorized", { status: 401 });
+        return NextResponse.json({
+                        message:"Invalid Headers",
+                    }, {status:401})
     }
 
     const payload = await request.json();
@@ -30,7 +33,9 @@ export async function POST(request: Request) {
 
     if (!CLERK_WEBHOOK_SIGNING_SECRET) {
         console.error("CLERK_WEBHOOK_SIGNING_SECRET not found in environment");
-        return new Response("Server configuration error", { status: 500 });
+        return NextResponse.json({
+                        message:"Internal Server error",
+                    }, {status:500})
     }
 
     const wh = new Webhook(CLERK_WEBHOOK_SIGNING_SECRET);
@@ -38,7 +43,6 @@ export async function POST(request: Request) {
     let evt: WebhookEvent;
 
     try {
-        console.log("Verifying webhook signature...");
         evt = wh.verify(body,{
             "svix-id": svixId,
             "svix-timestamp": svixTimestamp,
@@ -47,13 +51,14 @@ export async function POST(request: Request) {
     }
     catch (e) {
         console.error("Signature verification failed:", e);
-        return new Response("Invalid Signature", { status: 401 });
+        return NextResponse.json({
+                        message:"Invalid Signature",
+                    }, {status:403})
     }
 
     const  { type, data } = evt;
-    console.log("Event type:", type);
 
-    if (type === "user.created") {
+    if (type === "user.created" || type === "user.updated") {
         const { id, email_addresses, first_name, last_name, image_url } = data;
 
         const userEmail = email_addresses?.[0]?.email_address ?? "";
@@ -66,20 +71,24 @@ export async function POST(request: Request) {
                 update: {
                     email: userEmail,
                     name: fullName,
-                    image: image_url || null,
+                    image: image_url || null
                 },
                 create: {
                     clerkId: id,
                     email: userEmail,
                     name: fullName,
-                    image: image_url || null,
+                    image: image_url || null
                 },
             });
 
-            return new Response("User synced", { status: 200 });
+            return NextResponse.json({
+                        message:"User Synced",
+                    }, {status:200})
         } catch (e) {
             console.error("Error syncing user:", e);
-            return new Response("Error syncing user", { status: 500 });
+            return NextResponse.json({
+                        message:"Internal Server error",
+                    }, {status:500})
         }
     }
 }
