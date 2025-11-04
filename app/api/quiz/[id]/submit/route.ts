@@ -14,7 +14,7 @@ export async function POST(request: NextRequest, {params}: {params: {id:string}}
     }
 
    try {
-        const quiz = await prisma.quiz.findUnique({
+        const quiz = await prisma.quiz.findFirst({
             where: {id:params.id}
         })
 
@@ -30,9 +30,9 @@ export async function POST(request: NextRequest, {params}: {params: {id:string}}
 
         
         const {finalScore} = await request.json() as {finalScore:number};
-        
+        const {id} = await params
         await prisma.quiz.update({
-            where: {id:params.id},
+            where: {id},
             data: {
                 score: finalScore
             }
