@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
         }, {status:200})
 
     } catch (error) {
-        console.log("Fetch quizzes error: ", error);
+        // Don't log error details in production
         return NextResponse.json({
             message:"Internal server error"
         }, {status:500})

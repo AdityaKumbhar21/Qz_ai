@@ -79,7 +79,7 @@ export default function FlashCardQuiz({
       });
       setQuizCompleted(true);
     } catch (error) {
-      console.error('Failed to submit score:', error);
+      // Silent fail - score already calculated on frontend
       setQuizCompleted(true);
     }
   };

@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function POST(request: NextRequest, {params}: {params: {id:string}}){
+export async function POST(request: NextRequest, {params}: {params: Promise<{id:string}>}){
 
     const {userId} = await auth()
 
@@ -14,8 +14,9 @@ export async function POST(request: NextRequest, {params}: {params: {id:string}}
     }
 
    try {
+        const { id } = await params;
         const quiz = await prisma.quiz.findFirst({
-            where: {id:params.id}
+            where: {id}
         })
 
         if (!quiz || quiz.userId !== (await prisma.user.findFirst({where:{clerkId:userId}}))?.id){
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest, {params}: {params: {id:string}}
 
         
         const {finalScore} = await request.json() as {finalScore:number};
-        const {id} = await params
+        
         await prisma.quiz.update({
             where: {id},
             data: {
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest, {params}: {params: {id:string}}
 
    } 
    catch (error) {
-       console.error("Error submitting quiz: ", error);
+       // Don't log error details in production
        return NextResponse.json({
            message:"Internal Server Error",
        }, {status:500})

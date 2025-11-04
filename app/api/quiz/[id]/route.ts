@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId } = await auth();
   const { id } = await params;
@@ -56,7 +56,7 @@ export async function GET(
       { status: 200 }
     );
   } catch (error) {
-    console.log("Fetch quiz error: ", error);
+    // Don't log error details in production
     return NextResponse.json(
       {
         message: "Internal server error",
@@ -67,7 +67,7 @@ export async function GET(
 }
 
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { userId } = await auth();
   const { id } = await params;
 
@@ -132,7 +132,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       { status: 200 }
     );
   } catch (error) {
-    console.log("Delete quiz error: ", error);
+    // Don't log error details in production
     return NextResponse.json(
       {
         message: "Internal server error",

@@ -19,12 +19,12 @@ export async function POST(){
     });
 
     if (!existingUser) {
-        await prisma.user.create({
-            data:{
+        const user = await prisma.user.create({
+            data: {
                 clerkId: userId,
-                email: clerkUser.email_addresses[0]?.email_address || '',
-                fullName: clerkUser.first_name + ' ' + clerkUser.last_name,
-                profileImageUrl: clerkUser.profile_image_url
+                email: clerkUser.emailAddresses[0]?.emailAddress || '',
+                name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim(),
+                image: clerkUser.imageUrl || null
             }
         });
     }

@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
 
     } catch (error) {
-        console.log("Quiz generation error: ", error);
+        // Don't log error details in production
         return NextResponse.json({
                 message:"Internal Server error",
             }, {status:500})

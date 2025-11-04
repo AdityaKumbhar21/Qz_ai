@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import { redirect } from 'next/navigation';
 import QuizClient from '@/components/QuizClient';
 
-export default async function QuizPage({ params }: { params: { id: string } }) {
+export default async function QuizPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await currentUser();
   if (!user) redirect('/sign-in');
   const { id } = await params;
