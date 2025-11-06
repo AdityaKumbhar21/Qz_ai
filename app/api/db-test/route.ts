@@ -9,7 +9,7 @@ export async function GET() {
       users
     });
   } catch (err) {
-    console.error("❌ DB error:", err);
+    console.log("❌ DB error:", err);
     return new Response("DB Error", { status: 500 });
   }
 }
