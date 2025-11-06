@@ -108,7 +108,7 @@ export default function FlashCardQuiz({
               <div className="text-4xl md:text-5xl mb-3">{emoji}</div>
               <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${color}`}>{message}</h2>
               <p className="text-muted-foreground text-sm md:text-base">
-                {isReview ? 'Quiz Review Completed!' : 'You&apos;ve completed the quiz!'}
+                {isReview ? 'Quiz Review Completed!' : `You've completed the quiz!`}
               </p>
             </div>
 
@@ -229,7 +229,7 @@ export default function FlashCardQuiz({
             <div className="mt-3 pt-3 border-t space-y-2">
               <div className={`p-3 rounded-lg ${isCorrect ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
                 <p className={`font-semibold text-sm md:text-base text-center ${isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                  {isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                  {isCorrect ? 'Correct!' : 'Incorrect'}
                 </p>
                 {!isCorrect && (
                   <p className="text-xs mt-1 text-muted-foreground text-center">

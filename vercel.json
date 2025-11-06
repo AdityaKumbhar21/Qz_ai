@@ -4,7 +4,6 @@
   "outputDirectory": ".next",
   "functions": {
     "app/**/*.{ts,tsx}": {
-      "memory": 1024,
       "maxDuration": 30
     }
   }
