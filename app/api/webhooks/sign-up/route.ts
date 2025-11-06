@@ -3,6 +3,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/webhooks";  
 import { NextResponse } from "next/server";
+import { error } from "console";
 
 const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET!;
 
@@ -88,6 +89,7 @@ export async function POST(request: Request) {
             console.error("Error syncing user:", e);
             return NextResponse.json({
                         message:"Internal Server error",
+                        error: e instanceof Error ? e.message : String(e)
                     }, {status:500})
         }
     }
