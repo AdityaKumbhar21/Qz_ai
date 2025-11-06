@@ -4,7 +4,7 @@ const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/api/webhooks/sign-up",   // ✅ allow all webhook routes
+  "/api/webhooks/sign-up",   
   "/api/db-test"
 ]);
 

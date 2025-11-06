@@ -6,11 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  // Include the binary target for Vercel's runtime to ensure Prisma's
-  // query engine is available after deployment. This helps avoid the
-  // "engine not found" error for rhel-openssl-3.0.x on Vercel.
-  // Add a few common Linux targets so builds on Vercel, Fly, and other
-  // serverless platforms will include a compatible native engine binary.
+  output   = "../node_modules/.prisma/client"
   binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x", "linux-musl"]
 }
 
