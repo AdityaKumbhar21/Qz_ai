@@ -53,7 +53,7 @@ export default function CTA() {
           </div>
 
           <p className="text-sm text-muted-foreground">
-            No credit card required • Free forever • Unlimited quizzes
+            No credit card required • Unlimited quizzes
           </p>
         </div>
       </div>

@@ -21,6 +21,15 @@ type FlashCardQuizProps = {
   isReview?: boolean;
 };
 
+function normalizeText(s: string) {
+  return s
+    .replace(/<\/?[^>]+(>|$)/g, "") // remove HTML
+    .replace(/\s+/g, " ")          // collapse spaces
+    .trim()
+    .toLowerCase();
+}
+
+
 export default function FlashCardQuiz({ 
   quizId, 
   questions, 
@@ -38,14 +47,22 @@ export default function FlashCardQuiz({
 
   const q = questions[currentIdx];
   const isLast = currentIdx === questions.length - 1;
-  const isCorrect = selected === q.answer;
+  // In review mode, always show as correct since we're showing the right answer
+  const isCorrect = isReview ? true : (selected ? normalizeText(selected) === normalizeText(q.answer) : false);
   const progress = ((currentIdx + 1) / questions.length) * 100;
+
+  console.log(q);
+  console.log(q.answer);
+  console.log(selected);
+  
+  
+  
 
   const handleSelect = (opt: string) => {
     if (answered[currentIdx] || isReview) return;
     setSelected(opt);
     setShowResult(true);
-    if (opt === q.answer) {
+    if (normalizeText(opt) === normalizeText(q.answer)) {
       setScore(s => s + 1);
     }
     setAnswered(a => {
@@ -53,6 +70,9 @@ export default function FlashCardQuiz({
       copy[currentIdx] = true;
       return copy;
     });
+
+     console.log(q.answer);
+  console.log(selected);
   };
 
   const goNext = () => {
@@ -108,7 +128,7 @@ export default function FlashCardQuiz({
               <div className="text-4xl md:text-5xl mb-3">{emoji}</div>
               <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${color}`}>{message}</h2>
               <p className="text-muted-foreground text-sm md:text-base">
-                {isReview ? 'Quiz Review Completed!' : `You've completed the quiz!`}
+                {isReview ? 'Quiz Review Completed!' : 'You&apos;ve completed the quiz!'}
               </p>
             </div>
 
@@ -184,8 +204,8 @@ export default function FlashCardQuiz({
         </CardHeader>
         <CardContent className="space-y-2 p-4">
           {q.options.map((opt, i) => {
-            const isSelected = selected === opt;
-            const isAnswer = opt === q.answer;
+            const isSelected = selected ? normalizeText(selected) === normalizeText(opt) : false;
+            const isAnswer = normalizeText(opt) === normalizeText(q.answer);
             
             let buttonStyle = "border-2 ";
             if (showResult && isAnswer) {
