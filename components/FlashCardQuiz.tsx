@@ -128,7 +128,7 @@ export default function FlashCardQuiz({
               <div className="text-4xl md:text-5xl mb-3">{emoji}</div>
               <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${color}`}>{message}</h2>
               <p className="text-muted-foreground text-sm md:text-base">
-                {isReview ? 'Quiz Review Completed!' : 'You&apos;ve completed the quiz!'}
+                {isReview ? 'Quiz Review Completed!' : `You've completed the quiz!`}
               </p>
             </div>
 
